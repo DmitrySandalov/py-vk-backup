@@ -29,6 +29,19 @@ def normalize(text):
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], text).lower()
 
 
+def get_max_res_photo(photo):
+    """Return URL to photo with maximum resolution"""
+    photo_sizes = ['w', 'z', 'y', 'r', 'q', 'p', 'o', 'x', 'm', 's']
+    for i in range(len(photo_sizes)):
+        try:
+            url = (item for item in photo['sizes']
+                   if item['type'] == photo_sizes[i]).__next__()
+            break
+        except:
+            continue
+    return url['src']
+
+
 def download_all_albums(group):
     albums = api.photos.getAlbums(owner_id='-' + group)
     print("Albums: ", len(albums))
@@ -51,8 +64,9 @@ def download_album_to_dir(group, album, size, directory):
         os.makedirs(directory)
     counter = 1
     with progressbar.ProgressBar(max_value=size) as bar:
-        for photo in api.photos.get(owner_id='-' + group, album_id=album):
-            url = photo['src_xxxbig']
+        for photo in api.photos.get(owner_id='-' + group,
+                                    album_id=album, photo_sizes=1):
+            url = get_max_res_photo(photo)
             out = os.path.join(directory, '{:04d}.jpg'.format(counter))
             urllib.request.urlretrieve(url, out)
             counter += 1
