@@ -56,7 +56,7 @@ def download_album_to_dir(group, album, size, directory):
             out = os.path.join(directory, '{:04d}.jpg'.format(counter))
             urllib.request.urlretrieve(url, out)
             counter += 1
-            bar.update(counter)
+            bar.update(counter - 1)
 
 if len(sys.argv) == 2:
     download_all_albums(sys.argv[1])
