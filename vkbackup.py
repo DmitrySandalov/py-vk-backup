@@ -59,7 +59,7 @@ def download_album(group, alb):
 
 
 def download_album_to_dir(group, album, size, directory):
-    print(directory + ' [album_id: ' + album + ']')
+    print(directory, ' [ album_id:', album, ']')
     if not os.path.exists(directory):
         os.makedirs(directory)
     counter = 1
